@@ -1,4 +1,4 @@
-module github.com/hexa-ticker/ht-utils-go/errors/restErrors
+module github.com/hexa-ticker/ht-utils-go/errors
 
 go 1.19
 
