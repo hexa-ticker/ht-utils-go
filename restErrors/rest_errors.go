@@ -11,11 +11,11 @@ type RestErr struct {
 	Causes  []interface{} `json:"causes"`
 }
 
-func NewError(message string, status int, error string) *RestErr {
+func NewError(message string, status int, err error) *RestErr {
 	return &RestErr{
 		Message: message,
 		Status:  status,
-		Error:   error,
+		Error:   err.Error(),
 	}
 }
 
