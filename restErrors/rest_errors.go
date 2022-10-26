@@ -19,6 +19,14 @@ func NewError(message string, status int, error string) *RestErr {
 	}
 }
 
+func NewUnauthorizedError() *RestErr {
+	return &RestErr{
+		Message: "Unable to retrieve user information rm the given access_token",
+		Status:  http.StatusUnauthorized,
+		Error:   "unauthorized",
+	}
+}
+
 func NewBadRequestError(message string) *RestErr {
 	return &RestErr{
 		Message: message,
