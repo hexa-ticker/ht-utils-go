@@ -4,6 +4,13 @@ import (
 	"fmt"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
+	"os"
+	"strings"
+)
+
+const (
+	envLogOutput = "LOG_OUTPUT"
+	envLogLevel  = "LOG_LEVEL"
 )
 
 var (
@@ -14,10 +21,17 @@ type logger struct {
 	log *zap.Logger
 }
 
+type HtLogger interface {
+	Print(v ...interface{})
+	Printf(format string, v ...interface{})
+	//Info(msg string, tags ...zap.Field)
+	//Error(msg string, err error, tags ...zap.Field)
+}
+
 func init() {
 	logConfig := zap.Config{
-		OutputPaths: []string{"stdout"},
-		Level:       zap.NewAtomicLevelAt(zap.InfoLevel),
+		OutputPaths: []string{getOutput()},
+		Level:       zap.NewAtomicLevelAt(getLevel()),
 		Encoding:    "json",
 		EncoderConfig: zapcore.EncoderConfig{
 			LevelKey:     "level",
@@ -35,15 +49,40 @@ func init() {
 	}
 }
 
-func GetLogger() logger {
+func getOutput() string {
+	output := strings.TrimSpace(os.Getenv(envLogOutput))
+	if output == "" {
+		return "stdout"
+	}
+	return output
+}
+
+func getLevel() zapcore.Level {
+	switch strings.ToLower(strings.TrimSpace(os.Getenv(envLogLevel))) {
+	case "debug":
+		return zap.DebugLevel
+	case "info":
+		return zap.InfoLevel
+	case "error":
+		return zap.ErrorLevel
+	default:
+		return zap.InfoLevel
+	}
+}
+
+func GetLogger() HtLogger {
 	return log
 }
 
-func (l logger) Printf(formate string, v ...interface{}) {
+func (l logger) Print(v ...interface{}) {
+	Info(fmt.Sprintf("%v", v))
+}
+
+func (l logger) Printf(format string, v ...interface{}) {
 	if len(v) == 0 {
-		Info(formate)
+		Info(format)
 	} else {
-		Info(fmt.Sprintf(formate, v...))
+		Info(fmt.Sprintf(format, v...))
 	}
 }
 
