@@ -28,7 +28,7 @@ func (e restErr) Status() int {
 	return e.status
 }
 func (e restErr) Error() string {
-	return fmt.Sprintf("message: %s, status: %d, error: %s, causes: [ %v ]",
+	return fmt.Sprintf("{message: %s, status: %d, error: %s, causes: [ %v ]}",
 		e.message, e.status, e.error, e.causes)
 }
 func (e restErr) Causes() []interface{} {
