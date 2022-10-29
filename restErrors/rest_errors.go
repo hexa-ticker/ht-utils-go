@@ -28,7 +28,7 @@ func (e restErr) Status() int {
 	return e.status
 }
 func (e restErr) Error() string {
-	return fmt.Sprintf("{message: %s, status: %d, error: %s, causes: [ %v ]}",
+	return fmt.Sprintf("message: %s, status: %d, error: %s, causes: [ %v ]",
 		e.message, e.status, e.error, e.causes)
 }
 func (e restErr) Causes() []interface{} {
@@ -36,7 +36,7 @@ func (e restErr) Causes() []interface{} {
 }
 
 func NewRestError(message string, status int, error string, causes []interface{}) RestErr {
-	return &restErr{
+	return restErr{
 		message: message,
 		status:  status,
 		error:   error,
@@ -49,11 +49,11 @@ func NewRestErrorFromBytes(bytes []byte) (RestErr, error) {
 	if err := json.Unmarshal(bytes, &apiErr); err != nil {
 		return nil, errors.New("invalid_json")
 	}
-	return &apiErr, nil
+	return apiErr, nil
 }
 
 func NewBadRequestError(message string) RestErr {
-	return &restErr{
+	return restErr{
 		message: message,
 		status:  http.StatusBadRequest,
 		error:   "bad_request",
@@ -61,7 +61,7 @@ func NewBadRequestError(message string) RestErr {
 }
 
 func NewNotFoundError(message string) RestErr {
-	return &restErr{
+	return restErr{
 		message: message,
 		status:  http.StatusNotFound,
 		error:   "not_found",
@@ -69,7 +69,7 @@ func NewNotFoundError(message string) RestErr {
 }
 
 func NewUnauthorizedError(message string) RestErr {
-	return &restErr{
+	return restErr{
 		message: message,
 		status:  http.StatusUnauthorized,
 		error:   "unauthorised",
@@ -85,5 +85,5 @@ func NewInternalServerError(message string, err error) RestErr {
 	if err != nil {
 		result.causes = append(result.causes, err.Error())
 	}
-	return &result
+	return result
 }
