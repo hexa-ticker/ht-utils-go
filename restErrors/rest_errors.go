@@ -65,6 +65,7 @@ func NewNotFoundError(message string) RestErr {
 		message: message,
 		status:  http.StatusNotFound,
 		error:   "not_found",
+		causes:  nil,
 	}
 }
 
